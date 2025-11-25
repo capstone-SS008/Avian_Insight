@@ -1,7 +1,7 @@
 from fastapi import FastAPI, UploadFile, File
 from utils.image_inference import predict_bird_image
 from utils.sound_inference import predict_bird_sound
-from utils.separation_inference import separate_and_identify
+from utils.separation_inference import separate_and_classify
 
 app = FastAPI(title="Bird Classification API")
 
@@ -28,7 +28,7 @@ async def predict_sound(file: UploadFile = File(...)):
 # ---------------------------------------
 # 3. Bird Sound Separation + Classification
 # ---------------------------------------
-@app.post("/separate_and_identify")
+@app.post("/separate_and_classify")
 async def separate_and_identify_api(file: UploadFile = File(...)):
-    result = await separate_and_identify(file)
+    result = await separate_and_classify(file)
     return {"prediction": result}

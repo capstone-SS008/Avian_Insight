@@ -23,7 +23,7 @@ model = models.resnet18(pretrained=False)
 model.fc = nn.Linear(model.fc.in_features, num_classes)
 
 model.load_state_dict(
-    torch.load("app/models/bird_img_classifier.pth", map_location=device)
+    torch.load("bird_models/bird_img_classifier.pth", map_location=device)
 )
 model.to(device)
 model.eval()

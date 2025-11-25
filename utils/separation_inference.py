@@ -38,7 +38,7 @@ classifier = create_model("vit_base_patch16_224", pretrained=True, num_classes=l
 classifier.head = nn.Linear(classifier.head.in_features, len(selected_birds))
 
 classifier.load_state_dict(torch.load(
-    "backend/bird_models/ast_classifier.pth",
+    "bird_models/ast_classifier.pth",
     map_location=device
 ))
 classifier.to(device)

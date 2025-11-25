@@ -22,7 +22,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 # Load ViT/AST audio classifier
 model = create_model("vit_base_patch16_224", pretrained=True, num_classes=len(selected_birds))
 model.head = nn.Linear(model.head.in_features, len(selected_birds))
-model.load_state_dict(torch.load("app/models/ast_classifier.pth", map_location=device))
+model.load_state_dict(torch.load("bird_models/ast_classifier.pth", map_location=device))
 model.to(device)
 model.eval()
 
