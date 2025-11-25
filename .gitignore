@@ -1,0 +1,63 @@
+# --------------------
+# PYTHON
+# --------------------
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pkl
+*.swp
+
+# virtual environments
+venv/
+env/
+.venv/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Cache
+.cache/
+*.cache
+
+# --------------------
+# FASTAPI / SERVER
+# --------------------
+# Uvicorn logs
+*.log
+
+# Uploaded files (if any)
+uploads/
+media/
+temp/
+*.tmp
+
+# --------------------
+# ENVIRONMENT VARIABLES
+# --------------------
+.env
+.env.*
+*.secret
+
+# --------------------
+# OS SPECIFIC
+# --------------------
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+desktop.ini
+
+# Linux
+*~
+
+# --------------------
+# IDE / EDITORS
+# --------------------
+# VS Code
+.vscode/
+# JetBrains
+.idea/
+
+bird_models/

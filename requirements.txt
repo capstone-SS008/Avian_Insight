@@ -1,0 +1,14 @@
+fastapi
+uvicorn
+python-multipart
+pydantic
+torch
+torchvision
+torchaudio
+timm
+librosa
+pillow
+matplotlib
+numpy
+soundfile
+asteroid
