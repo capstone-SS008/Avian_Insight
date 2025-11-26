@@ -9,6 +9,10 @@ from asteroid.models import ConvTasNet
 from torchvision import transforms
 import matplotlib.pyplot as plt
 
+# 🔹 NEW IMPORTS
+import os
+import tempfile
+from fastapi import UploadFile
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
@@ -17,7 +21,7 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 # -----------------------------
 separator = ConvTasNet(n_src=2)
 separator.load_state_dict(torch.load(
-    "backend/bird_models/conv_tasnet_mixed_classifier.pth",
+    "bird_models/conv_tas_net.pth",
     map_location=device
 ))
 separator.to(device)
@@ -100,7 +104,7 @@ def audio_to_mel_spectrogram(waveform, sr=8000, n_mels=128):
 def classify_waveform(waveform, sr):
     mel_spec = audio_to_mel_spectrogram(waveform, sr)
     
-    temp_path = "backend/temp/temp_spec.png"
+    temp_path = "temp_spec.png"
     plt.imsave(temp_path, mel_spec[0], cmap="viridis")
 
     img = Image.open(temp_path).convert("RGB")
@@ -113,17 +117,35 @@ def classify_waveform(waveform, sr):
     return selected_birds[pred]
 
 # -----------------------------
-# END-TO-END FUNCTION
+# END-TO-END FUNCTION (for UploadFile)
 # -----------------------------
-def separate_and_classify(audio_path):
-    sources, sr = separate_sources(audio_path)
+async def separate_and_classify(file: UploadFile):
+    """
+    Accepts a FastAPI UploadFile, saves it to a temp path,
+    then runs separation + classification.
+    """
+    # 1. Save file to a temporary path
+    suffix = os.path.splitext(file.filename)[1] or ".wav"
+    with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as tmp:
+        contents = await file.read()
+        tmp.write(contents)
+        temp_path = tmp.name
 
-    results = []
-    for idx, src in enumerate(sources):
-        bird = classify_waveform(src.unsqueeze(0), sr)
-        results.append({
-            "source": idx + 1,
-            "predicted_bird": bird
-        })
+    try:
+        # 2. Run your existing path-based pipeline
+        sources, sr = separate_sources(temp_path)
 
-    return results
+        results = []
+        for idx, src in enumerate(sources):
+            bird = classify_waveform(src.unsqueeze(0), sr)
+            results.append({
+                "source": idx + 1,
+                "predicted_bird": bird
+            })
+
+        return results
+
+    finally:
+        # 3. Cleanup temp file
+        if os.path.exists(temp_path):
+            os.remove(temp_path)

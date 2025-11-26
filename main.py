@@ -15,6 +15,7 @@ def root():
 @app.post("/predict_image")
 async def predict_image(file: UploadFile = File(...)):
     result = await predict_bird_image(file)
+    print(result)
     return {"prediction": result}
 
 # -------------------------
@@ -23,12 +24,15 @@ async def predict_image(file: UploadFile = File(...)):
 @app.post("/predict_sound")
 async def predict_sound(file: UploadFile = File(...)):
     result = await predict_bird_sound(file)
+    print(result)
     return {"prediction": result}
 
 # ---------------------------------------
 # 3. Bird Sound Separation + Classification
 # ---------------------------------------
-@app.post("/separate_and_classify")
+@app.post("/separater")
 async def separate_and_identify_api(file: UploadFile = File(...)):
-    result = await separate_and_classify(file)
+    print("Separation and Classification")
+    result = await  separate_and_classify(file)
+    print(result)
     return {"prediction": result}
