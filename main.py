@@ -1,9 +1,18 @@
 from fastapi import FastAPI, UploadFile, File
+from fastapi.middleware.cors import CORSMiddleware
 from utils.image_inference import predict_bird_image
 from utils.sound_inference import predict_bird_sound
 from utils.separation_inference import separate_and_classify
 
 app = FastAPI(title="Bird Classification API")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/")
 def root():
@@ -14,8 +23,8 @@ def root():
 # -------------------------
 @app.post("/predict_image")
 async def predict_image(file: UploadFile = File(...)):
+    print("Image Classification")
     result = await predict_bird_image(file)
-    print(result)
     return {"prediction": result}
 
 # -------------------------
